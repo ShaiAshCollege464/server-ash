@@ -65,8 +65,49 @@ public class DbUtils {
         }
 
         return users;
+    }
+
+
+    public User getUser (String username, String phone) {
+        try {
+            PreparedStatement preparedStatement = this.connection
+                    .prepareStatement("SELECT id " +
+                            "FROM users " +
+                            "WHERE username = ? " +
+                            "  AND phone = ?");
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, phone);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt(1));
+                return user;
+            }
+        } catch (SQLException e) {
+
+        }
+        return null;
+    }
+
+    public boolean isUsernameAvailable (String username) {
+        try {
+            PreparedStatement preparedStatement = this.connection
+                    .prepareStatement("SELECT id FROM users WHERE username = ?");
+            preparedStatement.setString(1, username);
+            preparedStatement.setMaxRows(1);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+        }
+        return false;
+
 
     }
+
 
 
 }

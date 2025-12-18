@@ -1,9 +1,7 @@
 package com.college.controllers;
 
 
-import com.college.AllUsersResponse;
-import com.college.BasicResponse;
-import com.college.User;
+import com.college.*;
 import com.college.utils.DbUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static com.college.utils.Errors.ERROR_MISSING_FIRST_NAME;
-import static com.college.utils.Errors.ERROR_MISSING_LAST_NAME;
+import static com.college.utils.Errors.*;
 
 
 @RestController
@@ -51,6 +48,29 @@ public class GeneralController {
         }
     }
 
+    @RequestMapping("is-username-available")
+    public BasicResponse isUsernameAvailable (String username) {
+        if (username != null && !username.isEmpty()) {
+            boolean available = dbUtils.isUsernameAvailable(username);
+            return new BooleanResponse(true, null, available);
+        } else {
+            return new BasicResponse(false, ERROR_MISSING_USERNAME);
+        }
+    }
+
+    @RequestMapping("sign-in")
+    public BasicResponse signIn (String username, String phone) {
+        if (username != null && !username.isEmpty()) {
+            if (phone != null && !phone.isEmpty()) {
+                User user = dbUtils.getUser(username, phone);
+                return new UserResponse(true, null, user);
+            } else {
+                return new BasicResponse(false, ERROR_MISSING_PASSWORD);
+            }
+        } else {
+            return new BasicResponse(false, ERROR_MISSING_USERNAME);
+        }
+    }
 
 
 

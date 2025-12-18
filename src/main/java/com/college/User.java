@@ -3,6 +3,7 @@ package com.college;
 import java.util.List;
 
 public class User {
+    private int id;
     private String firstName;
     private String lastName;
     private String phone;
@@ -57,5 +58,13 @@ public class User {
 
     public void setFollowers(List<User> followers) {
         this.followers = followers;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
