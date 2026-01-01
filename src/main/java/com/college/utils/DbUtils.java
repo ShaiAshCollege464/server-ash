@@ -32,12 +32,10 @@ public class DbUtils {
     public void createUserOnDb (User user) {
         try {
             PreparedStatement statement = this.connection.prepareStatement(
-                    "INSERT INTO users (first_name, last_name, phone, username)" +
-                    "VALUE (?, ?, ?, ?)");
-            statement.setString(1, user.getFirstName());
-            statement.setString(2, user.getLastName());
-            statement.setString(3, user.getPhone());
-            statement.setString(4, user.getUsername());
+                    "INSERT INTO users (username, password)" +
+                    "VALUE (?, ?)");
+            statement.setString(1, user.getUsername());
+            statement.setString(2, user.getPassword());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -49,14 +47,12 @@ public class DbUtils {
         List<User> users = new ArrayList<>();
         try {
             PreparedStatement preparedStatement =
-                    this.connection.prepareStatement("SELECT first_name, last_name, phone, username FROM users");
+                    this.connection.prepareStatement("SELECT username, password FROM users");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                String firstName = resultSet.getString(1);
-                String lastName = resultSet.getString(2);
-                String phone = resultSet.getString(3);
-                String username = resultSet.getString(4);
-                User user = new User(firstName, lastName, phone, username);
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                User user = new User(username, password);
                 users.add(user);
 
             }
@@ -66,6 +62,42 @@ public class DbUtils {
 
         return users;
 
+    }
+
+    public boolean checkIfUsernameExists (String username) {
+        try {
+            PreparedStatement preparedStatement =
+                    this.connection.prepareStatement(
+                            "SELECT username FROM users " +
+                                    "WHERE username = ?");
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public User getUserByUsernameAndPassword (String username, String password) {
+        try {
+            PreparedStatement preparedStatement =
+                    this.connection.prepareStatement(
+                            "SELECT username, password FROM users " +
+                                    "WHERE username = ? " +
+                                    "AND password = ?");
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                String usr = resultSet.getString("username");
+                String pwd = resultSet.getString("password");
+                return new User(usr, pwd);
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

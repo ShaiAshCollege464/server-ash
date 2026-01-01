@@ -4,14 +4,14 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
 
 public class GeneralUtils {
 
-    public static String hashMd5 (String username, String password) {
+    public static String hash(String username, String password) {
         String source = username + password;
         try {
-            return DatatypeConverter.printHexBinary( MessageDigest.getInstance("MD5").digest(source.getBytes("UTF-8")));
+            return DatatypeConverter.printHexBinary(
+                    MessageDigest.getInstance("SHA-256").digest(source.getBytes("UTF-8")));
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (UnsupportedEncodingException e) {
