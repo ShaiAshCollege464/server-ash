@@ -86,6 +86,29 @@ public class GeneralController {
         }
     }
 
+    @RequestMapping("is-username-available")
+    public BasicResponse isUsernameAvailable (String username) {
+        if (username != null && !username.isEmpty()) {
+            boolean available = dbUtils.isUsernameAvailable(username);
+            return new BooleanResponse(true, null, available);
+        } else {
+            return new BasicResponse(false, ERROR_MISSING_USERNAME);
+        }
+    }
+
+    @RequestMapping("sign-in")
+    public BasicResponse signIn (String username, String phone) {
+        if (username != null && !username.isEmpty()) {
+            if (phone != null && !phone.isEmpty()) {
+                User user = dbUtils.getUser(username, phone);
+                return new UserResponse(true, null, user);
+            } else {
+                return new BasicResponse(false, ERROR_MISSING_PASSWORD);
+            }
+        } else {
+            return new BasicResponse(false, ERROR_MISSING_USERNAME);
+        }
+    }
 
 
 
