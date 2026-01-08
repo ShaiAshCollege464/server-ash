@@ -26,6 +26,17 @@ public class GeneralController {
     public void init () {
     }
 
+    private Map<Integer, Integer> someData = new HashMap<>();
+
+    @RequestMapping ("/get-from-map")
+    public Integer getFromMap (int key) {
+        long start = System.nanoTime();
+        dbUtils.someQuery();
+        System.out.println("Took: " + (start - System.nanoTime()));
+        return null;
+    }
+
+
     @RequestMapping("/all")
     public BasicResponse getAllUsers () {
         return new AllUsersResponse(

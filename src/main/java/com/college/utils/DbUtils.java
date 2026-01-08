@@ -140,6 +140,24 @@ public class DbUtils {
         }
     }
 
+    public void someQuery () {
+        try {
+            PreparedStatement
+                    preparedStatement =
+                    this.connection.prepareStatement("SELECT id FROM users " +
+                            "WHERE username = ?");
+            preparedStatement.setString(1, "Shai2");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                System.out.println("FOUND");
+            } else {
+                System.out.println("NOT FOUND");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 }
